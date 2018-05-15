@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7fde8771-a2d8-40a8-b67e-a7cde6fb9630" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/grockly.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/app.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/audio.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/block-connection.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/block-options-modal.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/block-options-modal.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/field-segment.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/keyboard-input.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/libs/Rx.umd.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/libs/angular2-all.umd.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/libs/angular2-polyfills.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/libs/es6-shim.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/accessible.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/click.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/click.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/click.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/delete.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/delete.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/delete.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/oops.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/oops.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/media/oops.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/messages.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/notifications.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/sidebar.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/toolbox-modal.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/toolbox-modal.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/translate.pipe.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/tree.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/utils.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/workspace-tree.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accessible/workspace.component.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/README.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/app.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/apple-touch-icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/index.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/index_redirect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/redirect.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/robots.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/storage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appengine/storage.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blockly_compressed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blockly_uncompressed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blocks/Action.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blocks/Genetics.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blocks/Nutrients.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blocks/Signals.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blocks_compressed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/block.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/block_drag_surface.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/block_render_svg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/block_svg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/blockly.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/blocks.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/bubble.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/comment.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/connection.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/connection_db.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/constants.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/contextmenu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/css.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/events.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_angle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_checkbox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_colour.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_date.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_dropdown.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_image.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_label.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_number.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_textinput.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/field_variable.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/flyout.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/flyout_button.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/generator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/icon.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/inject.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/input.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/msg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/mutator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/names.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/options.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/procedures.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/rendered_connection.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/scrollbar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/toolbox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/tooltip.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/touch.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/trashcan.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/utils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/variables.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/warning.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/widgetdiv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/workspace.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/workspace_drag_surface_svg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/workspace_svg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/xml.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/zoom_controls.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/debug.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/accessible/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/accessible/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/app_controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_exporter_controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_exporter_tools.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_exporter_view.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_library_controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_library_storage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_library_view.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/block_option.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/blocks.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/factory.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/factory.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/factory_utils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/link.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/standard_categories.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/workspacefactory/wfactory_controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/workspacefactory/wfactory_generator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/workspacefactory/wfactory_init.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/workspacefactory/wfactory_model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory/workspacefactory/wfactory_view.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory_old/blocks.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory_old/factory.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory_old/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory_old/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/blockfactory_old/link.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/code.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/icons.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/be-tarask.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ca.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/cs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/da.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/de.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/el.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/en.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/es.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/et.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/fa.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/fr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/he.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/hrx.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/hu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ia.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/is.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/it.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ja.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ko.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/mk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/nb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/nl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/oc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/pl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/pms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/pt-br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ru.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/sc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/sk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/sr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/sv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/ta.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/th.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/tlh.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/tr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/uk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/vi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/zh-hans.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/msg/zh-hant.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/code/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/custom-dialogs/custom-dialog.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/custom-dialogs/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/fixed/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/fixed/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/generator/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/generator/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/graph/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/graph/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/headless/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/headless/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/interpreter/acorn_interpreter.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/interpreter/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/interpreter/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/maxBlocks/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/maxBlocks/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/mirror/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/mirror/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/README.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/blocks.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/be-tarask.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ca.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/da.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/de.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/el.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/en.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/es.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/et.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/fa.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/fr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/he.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/hrx.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/hu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ia.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/is.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/it.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ja.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ko.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/nb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/nl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/pl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/pms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/pt-br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/ru.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/sc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/sv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/th.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/tr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/uk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/vi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/zh-hans.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/generated/zh-hant.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/plane.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/slider.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/soy/COPYING" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/soy/README" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/soy/SoyMsgExtractor.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/soy/SoyToJsSrcCompiler.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/soy/soyutils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/template.soy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/extracted_msgs.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ar.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_be-tarask.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_br.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ca.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_da.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_de.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_el.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_en.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_es.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_et.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_fa.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_fr.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_he.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_hrx.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_hu.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ia.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_is.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_it.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ja.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ko.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ms.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_nb.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_nl.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_pl.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_pms.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_pt-br.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ro.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_ru.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_sc.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_sv.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_th.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_tr.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_uk.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_vi.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_zh-hans.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/plane/xlf/translated_msgs_zh-hant.xlf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/prettify.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/prettify.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/resizable/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/resizable/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/resizable/overlay.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/rtl/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/rtl/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/storage/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/storage/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/toolbox/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demos/toolbox/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/index1.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/javascript_compressed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/FileSaver.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/jquery-3.2.1.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/1x1.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/click.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/click.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/click.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/delete.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/delete.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/delete.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/disconnect.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/disconnect.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/disconnect.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/handclosed.cur" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/handdelete.cur" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/handopen.cur" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/quote0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/quote1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/sprites.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/sprites.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/az.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ba.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/bcc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/be-tarask.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/bg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/bn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ca.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/cs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/da.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/de.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/diq.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/el.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/en-gb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/en.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/eo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/es.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/et.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/fa.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/fi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/fr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/he.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/hi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/hrx.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/hu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ia.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/id.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/is.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/it.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ja.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ko.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/lb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/lki.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/lrc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/lt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/lv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/mk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/nb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/nl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/oc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/pl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/pms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/pt-br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/pt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ru.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sd.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/shn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sq.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/sv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/ta.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/tcy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/th.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/tl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/tlh.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/tr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/uk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/vi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/zh-hans.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/js/zh-hant.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ar.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/az.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ba.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/bcc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/be-tarask.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/bg.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/bn.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/br.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ca.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/constants.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/cs.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/da.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/de.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/diq.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/el.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/en-gb.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/en.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/eo.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/es.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/et.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/fa.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/fi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/fr.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/he.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/hi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/hrx.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/hu.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ia.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/id.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/is.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/it.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ja.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ko.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/lb.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/lki.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/lrc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/lt.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/lv.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/mk.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ms.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/nb.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/nl.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/oc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/pl.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/pms.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/pt-br.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/pt.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/qqq.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ro.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ru.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sd.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/shn.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sk.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sl.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sq.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sr.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/sv.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/synonyms.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/ta.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/tcy.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/th.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/tl.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/tlh.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/tr.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/uk.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/vi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/zh-hans.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/json/zh-hant.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msg/messages.js" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="index1.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index1.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1620" />
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>groDiv</find>
+      <find>data</find>
+      <find>let</find>
+      <find>var</find>
+      <find>set</find>
+      <find>tAct</find>
+      <find>tDeact</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>dataParam</replace>
+      <replace>var</replace>
+      <replace>let</replace>
+      <replace>varUp</replace>
+      <replace>varDown</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/index.html" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1239" />
+    <option name="height" value="728" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="grockly" type="b2602c69:ProjectViewProjectNode" />
+              <item name="grockly" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7fde8771-a2d8-40a8-b67e-a7cde6fb9630" name="Default" comment="" />
+      <created>1526051485577</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1526051485577</updated>
+      <workItem from="1526051487700" duration="28502000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="28502000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="65" y="-4" width="1239" height="711" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16626312" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="167" column="24" lean-forward="true" selection-start-line="167" selection-start-column="24" selection-end-line="167" selection-end-column="24" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1620" />
+      </provider>
+    </entry>
+  </component>
+</project>

@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Grockly Web Simulator</title>
+
+  <!-- Librerias de blockly-->
+  <script src="blockly_compressed.js"></script>
+	<script src="blocks_compressed.js"></script>
+	<script src="msg/js/en.js"></script>
+  <script src="javascript_compressed.js"></script>
+  <script src="js/jquery-3.2.1.js"></script>
+  <script src="js/FileSaver.js"></script>
+  <!--Libreria para guardas xml en el PC-->
+  <!--Bloques Geneticos-->
+  <script src="blocks/Genetics.js"></script>
+  <!--Bloques de Acciones-->
+  <script src="blocks/Nutrients.js"></script>
+  <script src="blocks/Action.js"></script>
+  <script src="blocks/Signals.js"></script>
+
+  
+</head>
+<body>
+  <!--Entorno de Bloques-->
+  <div id="blocklyDiv" style= "position:  relative; width: 60%; top: 0; left: 0; background:  #ccc; float: left;  height: 650px;"></div>
+  <!--Entorno de Salida de codigio-->
+  <div id="groDiv"     style= "position:  relative; width: 40%; top: 0; right: 0; background: #ddf; float: right; height: 650px; overflow:scroll;"></div>
+  <!--Menu de Bloques-->
+  <xml id="toolbox"    style= "display: none">
+  <!--Tabla de Bloques-->
+  <category name="Experiment">
+      <block type="Experiment"></block>
+      </category>
+
+  <category name="Ecoli">
+      <block type="Ecoli"></block>
+      </category>
+
+  <category name="Plasmid">
+    <block type="Plasmid"></block>
+    </category>
+
+  <category name="Operon">
+    <block type="Operon"></block>
+    </category>
+
+  <category name="Promoter">
+    <block type="Promoter"></block>
+    </category>
+
+  <category name="Protein">
+    <block type="Protein"></block>
+    <block type="ProteinL"></block>
+    </category>
+  <category name="Actions">
+   
+    <block type="Action"></block>
+    <block type="Paint"></block>
+    <block type="Paint2"></block>
+    <block type="Conjugate"></block>
+    <block type="ActionR1"></block>
+    <block type="ActionR2"></block>
+    <block type="ActionR3"></block>
+    <block type="DumpSingle"></block>
+  </category>
+  <category name="Components">
+    <category name="Nutrients">
+        <block type="Nutrients"></block></category>
+    <category name="Signals">
+        <block type="Signal_Settings"></block>
+        <block type="Signal"></block></category>
+    </category>
+
+  
+  
+  </xml>
+<!--Conjunto de bloques iniciales -->
+  <xml id="startBlocks" style="display: none">
+      <block type="Experiment" inline="false" x= '0' y='0'>
+        </block>
+      
+  </xml>
+
+
+
+<script>
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '/media/',
+         toolbox: document.getElementById('toolbox'),
+          zoom:{controls: true, wheel:true,startScale: 1.0,maxScale: 3,minScale: 0.3,scaleSpeed: 1.2},ºtrashcan: true});
+         Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),
+                               workspace);  
+</script> 
+<script>
+/**---------------------------------------------------------------------------------------------
+                ESTRUCTURA DE ALMACENAMIENTO DE DATOS 
+-----------------------------------------------------------------------------------------------**/
+      
+      var groCode=' include gro '+"<p/>";
+      var promArray = [];
+      var protArray = [];
+      var operArray = [];
+      var plasArray = [];
+      var expArray  = [];
+      var cellArray = [];
+      var transFactors = [];
+      var actionCode ;
+      var signalCode;
+      var programCode;
+    
+      
+/**---------------------------------------------------------------------------------------------
+            FUNCIONES ENCARGADAS DE LA ESCRITURA DE LOS BLOQUES GENETICOS 
+-----------------------------------------------------------------------------------------------**/
+/**Cada metodo implementado abajo, genera el codigo .GRO relativo a la estructura representada 
+ * con bloques previamente 
+ * El conjunto de arrays  se utilizan como soporte para mantener la informacion recojida en 
+ * los bloques previamente colocados.
+ * Cada metodo codifica una parte del codigo que se van ensablando de forma recursiva
+ * en algunos casos. 
+ * El metodo WriteMain() ensambla todas las partes y genera el archivo .GRO
+ * 
+**/
+
+
+function writeExperiment(){
+  return xx = groCode+ 'set("dt",'+ expArray[0][0] +');set("population_max",'+ expArray[0][1] +');';
+}
+/**---------------------------------------------------------------------------------------------
+           FUNCION CODIFICADORA DE LA INFORMACION RELATIVA AL PROMOTOR
+-----------------------------------------------------------------------------------------------**/
+function writePromoter(operonName){
+    var xx = buscaNombre(operonName,promArray);
+    var groCode='promoter:=[function:="'+ xx[0][1] +'",transcription_factors:={';
+    for(var h=2;h<xx[0].length;h++){
+      if(h==2){
+      groCode=groCode+'"'+xx[0][h]+'"';}
+      else{groCode=groCode+',"'+xx[0][h]+'"'}
+    }
+    groCode=groCode+"}";
+    return groCode;
+}
+/**---------------------------------------------------------------------------------------------
+           FUNCION CODIFICADORA DE LA INFORMACION RELATIVA AL OPERON
+-----------------------------------------------------------------------------------------------**/
+function writeGenes(){
+  var groCode2;
+  var noise;
+  for(var t = 0;t<operArray.length;t++ ){
+      if(t==0){
+      noise="noise:=[toOff:="+operArray[t][1]+",toOn:="+operArray[t][2]+",noise_time:="+operArray[t][3]+"]]";
+      groCode2='genes([name:="'+ operArray[t][0] + '",'+writeProtein(operArray[t][0],noise);
+      }
+      else{
+      noise="noise:=[toOff:="+operArray[t][1]+",toOn:="+operArray[t][2]+",noise_time:="+operArray[t][3]+"]]";
+      groCode2=groCode2+'genes([name:="'+ operArray[t][0] + '",'+writeProtein(operArray[t][0],noise);
+      }
+  }
+    return groCode2;
+}
+/**---------------------------------------------------------------------------------------------
+            FUNCIONES RELATIVA A LA CODIFICACION DE LAS PROTEINAS
+-----------------------------------------------------------------------------------------------**/
+function writeProtein (operonName,noise){
+    var xx = buscaNombre(operonName,protArray);
+    var groCode1;
+    for (var t = 0;t<xx.length;t++ ){
+      if(t==0){
+        groCode1='proteins:={"'+xx[0][1]+'"';
+      }
+      else{
+        groCode1=groCode1+',"'+xx[t][1]+'"';
+      }
+    }
+    groCode1=groCode1+"},"+writePromoter(operonName)+",";
+    for (var t = 0;t<xx.length;t++ ){
+      var groAct;
+      var groDeact;
+      var groVarA;
+      var groVarD;
+      var groNoiseOn;
+      var groNoiseOff;
+      var groTnoise;
+      if(t==0){
+        groAct="prot_act_times:=[times:={"+xx[0][2];
+        groDeact="prot_deg_times:=[times:={"+xx[0][3];
+        groVarA=",variabilities:={"+xx[0][4];
+        groVarD=",variabilities:={"+xx[0][5];
+      }
+      else{
+        groAct=groAct+","+xx[t][2];
+        groDeact=groDeact+","+xx[t][3];
+        groVarA=groVarA+","+xx[t][4];
+        groVarD=groVarD+","+xx[t][5];
+      }
+    }
+    groCode1=groCode1+noise+","+groAct+"}"+groVarA+"}],"+groDeact+"}"+groVarD+"}]]); "
+    return groCode1;
+}
+/**---------------------------------------------------------------------------------------------
+            FUNCION CODIFICADORA RELATIVA A LOS PLASMIDOS
+-----------------------------------------------------------------------------------------------**/
+function writePlasmid(){
+    groCode= writeExperiment()+signalCode+writeGenes();
+    var groPlas;
+    for(var t=0;t<plasArray.length;t++){
+        if(t==0){
+          groPlas= "plasmids_genes([" +plasArray[0][1]+":={";
+          for(var h = 2;h<plasArray[t].length;h++){
+                 if(h==2){
+                 groPlas= groPlas+ '"'+plasArray[0][h]+'"';
+                          }
+                else{
+                 groPlas= groPlas+ ',"'+plasArray[0][h]+'"';
+                          }
+          }
+          groPlas= groPlas + "}";
+        }
+        else{
+          groPlas=groPlas+","+plasArray[t][1]+":={";
+          for(var h = 2;h<plasArray[t].length;h++){
+                 if(h==2){
+                 groPlas= groPlas+ '"'+plasArray[t][h]+'"';
+                          }
+                else{
+                 groPlas= groPlas+ ',"'+plasArray[t][h]+'"';
+                          }
+          }
+          groPlas= groPlas + "}";
+        }
+    }
+      return groCode= groCode+groPlas+"]);";
+}
+/**---------------------------------------------------------------------------------------------
+            FUNCION CODIFICADORA RELATIVA A LAS BACTERIAS
+-----------------------------------------------------------------------------------------------**/
+function writeCell(){
+    var code2="";
+    for(var t=0;t<cellArray.length;t++){
+        var xx=buscaNombre(cellArray[t][0],plasArray);
+        code2=code2+"c_ecolis("+cellArray[t][1]+","+ cellArray[t][2]+","+cellArray[t][3]+","+ cellArray[t][4]+",{";
+        for(var h=0;h<xx.length;h++){ 
+          code2=code2+'"'+xx[h][1]+'"';
+        if(h+1!=xx.length){code2=code2+",";}
+      }
+        code2=code2+"},program p());"
+      
+    }
+
+    return code2;
+}
+function writeMain(){
+  return code=writePlasmid()+actionCode+programCode+"program main():={"+writeCell()+"};";
+}
+/**---------------------------------------------------------------------------------------------
+                                FUNCIONES AUXILIARES
+-----------------------------------------------------------------------------------------------**/
+function buscaNombre(nombre,arr){
+    var data_arrays=[];
+    for(var t = 0;t<arr.length;t++ ){
+      if(arr[t][0]== nombre ){
+        data_arrays.push(arr[t]);
+      }
+    }
+  return data_arrays; 
+}
+/**---------------------------------------------------------------------------------------------
+            FUNCION QUE INICIA LA CODIFICIACION DE BLOQUES 
+-----------------------------------------------------------------------------------------------**/
+function myGenerator(){
+/**---------------------------------------------------------------------------------------------
+            VECTORES DE CARGA DE LA INFORMACION
+-----------------------------------------------------------------------------------------------**/
+      promArray = [];
+      protArray = [];
+      operArray = [];
+      plasArray = [];
+      expArray  = [];
+      cellArray = [];
+      transFactors = [];
+      groCode='include gro ';
+      actionCode="";
+      signalCode="";
+      programCode="program p():={skip();};";
+      var xx=[];
+      totalBlocks = this.workspace.getAllBlocks();
+
+      console.log("Calling myGenerator");
+      console.log(totalBlocks);
+    
+      for(var t=0;t<totalBlocks.length;t++){
+/**---------------------------------------------------------------------------------------------
+           CARGA DE INFORMACION DE LOS BLOQUES GENETICOS PARA CODIFICAR LOS DATOS
+-----------------------------------------------------------------------------------------------**/
+        if(totalBlocks[t].getInput("Experiment")){
+          expArray.push([totalBlocks[t].getFieldValue('dt'),totalBlocks[t].getFieldValue('Mppl')]);
+        }
+        if(totalBlocks[t].getInput("Ecoli")){
+          cellArray.push([totalBlocks[t].getFieldValue('NAME'),totalBlocks[t].getFieldValue('Ncells'),totalBlocks[t].getFieldValue('x'),totalBlocks[t].getFieldValue('y'),totalBlocks[t].getFieldValue('Radius'),totalBlocks[t].getFieldValue('Volume')]);
+        }
+        if(totalBlocks[t].getInput("Plasmid")){
+          xx=[totalBlocks[t].getSurroundParent().getFieldValue("NAME"),totalBlocks[t].getFieldValue('NAME')];
+          var des =totalBlocks[t].getDescendants();
+          for(var h=1;h<des.length;h++){
+            if(des[h].getInput("Operon") && des[h].getSurroundParent()==totalBlocks[t] ){
+            xx.push(des[h].getFieldValue("NAME"));}
+          }
+          plasArray.push(xx);
+        }
+        if(totalBlocks[t].getInput("Operon")){
+          operArray.push([totalBlocks[t].getFieldValue('NAME'),totalBlocks[t].getFieldValue('Nup'),totalBlocks[t].getFieldValue('Ndown'),totalBlocks[t].getFieldValue('Tnoise')]);
+        }
+        if(totalBlocks[t].getInput("Promoter")){
+          var tt=[totalBlocks[t].getParent().getFieldValue('NAME'),totalBlocks[t].getFieldValue('GATE')];
+          for(var h=1;h<totalBlocks[t].getDescendants().length;h++){
+            tt.push(totalBlocks[t].getDescendants()[h].getFieldValue("NAME"));
+          }
+          promArray.push(tt);
+        }
+        if(totalBlocks[t].getInput("Protein")){
+          if(totalBlocks[t].getParent().getInput("Operon")){
+          protArray.push([totalBlocks[t].getParent().getFieldValue('NAME'),totalBlocks[t].getFieldValue('NAME'),totalBlocks[t].getFieldValue('Act'),totalBlocks[t].getFieldValue('Deac'),totalBlocks[t].getFieldValue('Vup'),totalBlocks[t].getFieldValue('Vdown')]);
+          }
+          if(totalBlocks[t].getParent().getInput("Protein")){
+            var found=false;
+            var parent =totalBlocks[t].getParent();
+            while(!found){
+              parent=parent.getParent();
+              if(parent.getInput("Operon")){
+                found=true;
+                protArray.push([parent.getFieldValue('NAME'),totalBlocks[t].getFieldValue('NAME'),totalBlocks[t].getFieldValue('Act'),totalBlocks[t].getFieldValue('Deac'),totalBlocks[t].getFieldValue('Vup'),totalBlocks[t].getFieldValue('Vdown')]);
+              }
+            }
+          }
+        }
+/**---------------------------------------------------------------------------------------------
+                   ESCRITURA DE LOS BLOQUES DE ACCIONES
+-----------------------------------------------------------------------------------------------**/
+		
+        if(totalBlocks[t].getInput("Action")){
+          var des = totalBlocks[t].getDescendants();
+          var conditions="";
+          
+		  
+/**
+ * Todas las acciones se componen de un vector de condiciones , un tipo de accion y 
+ * parametros relativos a esa informacion por lo tanto la codificacion del vector de 
+ * condiciones sera igual en todos los casos.
+ *
+ * Una vez codificado este vector se escribe el resto de la informacion dependiendo del tipo
+ * de accion que se haya unido al bloque accion.
+ * */
+          for(var h=1;h<des.length;h++){
+            if(des[h].getParent()==totalBlocks[t]){
+              if(des[h].getInput("ProteinL")){
+                conditions='"'+des[h].getFieldValue("NAME")+'"';
+                for(var y=1;y<des[h].getDescendants().length;y++){
+                  conditions=conditions+',"'+des[h].getDescendants()[y].getFieldValue("NAME")+'"';
+                }
+
+              }
+              if(des[h].getInput("Paint")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{"'+des[h].getFieldValue("Fst")+'","'+des[h].getFieldValue("Snd")+'","'+des[h].getFieldValue("Thr")+'","'+des[h].getFieldValue("Fhr")+'"});'
+              }
+              if(des[h].getInput("Paint2")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{'+des[h].getFieldValue("COLOUR")+'});'
+              }
+              if(des[h].getInput("Conjugate")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{"'+des[h].getFieldValue("NAME")+'","'+des[h].getFieldValue("ratio")+'"});'
+              }
+              if(des[h].getInput("ActionR1")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{"'+des[h].getFieldValue("NAME")+'"});'
+              }
+              if(des[h].getInput("ActionR2")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{tostring('+des[h].getFieldValue("ID")+'),"'+des[h].getFieldValue("Snd")+'","'+des[h].getFieldValue("eTYPE")+'"});'
+              }
+              if(des[h].getInput("ActionR3")){
+                codeA='},"'+des[h].getFieldValue("TYPE")+'",{tostring('+des[h].getFieldValue("ID")+'),"'+des[h].getFieldValue("COMPARISON")+'","'+des[h].getFieldValue("Snd")+'","'+des[h].getFieldValue("PROTEIN")+'"});'
+              }
+
+            }
+             
+
+          }
+
+          actionCode=actionCode+' '+'action({'+conditions+codeA;
+        }
+		
+ /**---------------------------------------------------------------------------------------------
+                       ESCRITURA DE LOS MODULOS Y LAS SEÑALES    
+-----------------------------------------------------------------------------------------------**/        
+       if(totalBlocks[t].getInput("Nutrients")){
+         signalCode=signalCode+'set("nutrients", 1.0);set("nutrients_amount",'+totalBlocks[t].getFieldValue("NAM")+');set("nutrient_consumption_rate",'+totalBlocks[t].getFieldValue("NCR")+');set("nutrient_grid_length",'+totalBlocks[t].getFieldValue("NGL")+');set("nutrient_grid_cell_size",'+totalBlocks[t].getFieldValue("NGCS")+');set("nutrient_consumption_mode",'+totalBlocks[t].getFieldValue('NCM')+');';
+       }
+
+        if(totalBlocks[t].getInput("Signal")){
+          signalCode=signalCode+" "+ totalBlocks[t].getFieldValue("NAME")+':= s_signal([kdiff:='+totalBlocks[t].getFieldValue("KDIFF")+",kdeg:="+totalBlocks[t].getFieldValue("KDEG")+"]);"
+        }
+         if(totalBlocks[t].getInput("Signal_Settings")){
+          signalCode=signalCode+'set("signals", 1.0);set("signals_draw",'+totalBlocks[t].getFieldValue("POWER")+');set_param("signals_grid_length",'+totalBlocks[t].getFieldValue("LENGTH")+');set_param("signals_grid_cell_size",'+totalBlocks[t].getFieldValue("SIZE")+');set_param("signals_grid_neighborhood",'+totalBlocks[t].getFieldValue("NBH")+');';
+        }
+      if(totalBlocks[t].getInput("DumpSingle")){
+        programCode='program p() :={ selected:{ dump_single( fopen('+totalBlocks[t].getFieldValue("ROUTE")+' <> '+totalBlocks[t].getFieldValue("FN")+' <> tostring(('+totalBlocks[t].getFieldValue("RT")+'+1)) <> ".csv", "w"));}};';
+       }
+
+      
+}
+    //SALIDA POR PANTALLA
+//    var finalCode = writeMain();
+ //   document.getElementById("groDiv").innerHTML =finalCode;
+}
+
+/******************************************************************************
+                    ENVIO CODIGO GENERADO AL SIMULADOR GROW
+**********************************************************************************/
+function simulate() {
+  try {
+     var code = writeMain();
+
+   var f = new File([code], 'experiment.gro');
+    var formData = new FormData();
+    var request = new XMLHttpRequest();
+    var url = '/growckly';
+
+    formData.append("userfile", f);
+
+  //  formData = new FormData(document.querySelector("form"));
+
+    request.open("POST",url, false);
+
+    request.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.open();
+        document.write(request.response);
+        document.close();
+      }
+    }
+
+    request.send(formData); 
+  } catch (ex) {
+    alert("You have to create the experiment by clicking in 'Generate' button before simulating");
+  }
+}
+
+ </script>
+
+<!--form enctype="multipart/form-data" method="post" name="fileinfo">
+  <label for="file"><img id="imgLoad" src="icons/open.png" alt="Load a .gro file" title="Open a .gro file" /></label>
+  <input id="file" class="inputfile" type="file" name="file"  alt="Load a .gro file" title="Open a .gro file" />
+</form-->
+
+<button type="button" onclick="addBlock()">Generate Block</button>
+<button type="button" onclick="myGenerator()">Generate!</button>
+<button id="save-btn">Save</button>
+<button id="simulate" onclick="simulate()">Simulate</button>
+
+<script>
+$("#save-btn").click(function(){
+  var finalCode=writeMain();
+  var blob = new Blob([finalCode],{type: "text/plain;charset=utf-8"}
+  );
+  saveAs(blob,"test.gro");
+});
+
+</script>
+
+
+</body>
+</html>
