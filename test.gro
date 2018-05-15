@@ -1,0 +1,10 @@
+﻿*/
+Archivo .gro para probar la funcionalidad del conversor
+/*
+include gro 
+set("dt",1);set("population_max",2332123);
+genes([name:="op1",proteins:={"Prot1","Prot12"},promoter:=[function:="TRUE",transcription_factors:={"Prom1"},noise:=[toOff:=0,toOn:=0,noise_time:=0]],prot_act_times:=[times:={0,0},letiabilities:={0,0}],prot_deg_times:=[times:={0,0},letiabilities:={0,0}]]);
+genes([name:="op2",proteins:={"Prot2","Prot22"},promoter:=[function:="TRUE",transcription_factors:={},noise:=[toOff:=0,toOn:=0,noise_time:=0]],prot_act_times:=[times:={0,0},letiabilities:={0,0}],prot_deg_times:=[times:={0,0},letiabilities:={0,0}]]);
+genes([name:="op3",proteins:={"Prot3"},promoter:=[function:="TRUE",transcription_factors:={"Prom3"},noise:=[toOff:=0,toOn:=0,noise_time:=0]],prot_act_times:=[times:={0},letiabilities:={0}],prot_deg_times:=[times:={0},letiabilities:={0}]]);
+plasmids_genes([Pl1:={"op1"},Pl2:={"op2"},Pl3:={"op3"}]);
+program p():={skip();};program main():={c_ecolis(0,0,0,0,{"Pl1","Pl2"},program p());c_ecolis(0,0,0,0,{"Pl3"},program p());};

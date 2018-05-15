@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <!-- Autores: Aitor Moya Lopez (Grockly) and Fernando Moreno Bendala (Gro to Grockly conversion) -->
     <title>Grockly Web Simulator</title>
 
     <!-- Librerias de blockly-->
@@ -478,6 +479,8 @@
 
     //Funcion de manejo de archivos
 
+    let comment = false;
+
     document.getElementById('upload').addEventListener('change', handleFile, false);
 
     function handleFile(event) {
@@ -551,8 +554,18 @@
         }
     }*/
 
+    /*
+        Funcion para determinar que tipo de expresion contiene cada linea de codigo
+    */
     function parse(line) {
-        if (line.startsWith("set")) {
+        if (line.startsWith("/*")){
+            comment = true;
+        } else if (line.startsWith("*/")){
+            comment = false
+        } else if (comment){
+            //el texto dentro del comentario se ignora
+            console.log("leyendo comentarios");
+        } else if (line.startsWith("set")) {
             parseSet(line);
         } else if (line.startsWith("genes")){
             parseOperon(line);
@@ -565,6 +578,9 @@
         }
     }
 
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'set'
+    */
     function parseSet(line) {
         let setTimes = line.match(/set/g);
         for (let i = 0; i < setTimes.length; i++){
@@ -577,6 +593,10 @@
         }
     }
 
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'genes' (operon)
+        Esto incluye tambien los bloques 'protein', 'promoter' y 'proteinL' (lista de proteinas para 'promoter')
+    */
     function parseOperon(line){
         let operonData = [];
         if(line.includes("name")){
@@ -662,10 +682,18 @@
         createBlock("Operon", operonData);
     }
 
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'plasmids_genes'
+    */
     function parsePlasmid(line){
-
+        //plasmids_genes([Pl1:={"op1"},Pl2:={"op2"},Pl3:={"op3"}]);
+        let data = line.split("plasmids_genes([")[1];
+        data = data.split("]);")[0];
     }
 
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'c_ecolis'
+    */
     function parseEcolis(line) {
         let data = line.split("c_ecolis(")[1];
         let params = [];
@@ -673,13 +701,15 @@
         for (let i = 0; i < 4; i++) {
             params[i] = data[i];
         }
-        params[4] = data[4].split("{")[1].split("}")[0]; //plasmid to connect
+        params[4] = data[4].split("{")[1].split("}")[0]; //plasmido al que conectar
         //params[5] = data[5].split(";")[0];
         createBlock("Ecoli", params);
     }
 
-    // FUNCION ADDBLOCK
-
+    /*
+        Funcion crear o modificar el bloque 'Experiment', que contiene los datos de paso de tiempo (dt)
+        y poblacion maxima (population_max)
+    */
     function changeBlock(type, data) {
         if (type === "set") {
             let blocks = workspace.getAllBlocks();
@@ -726,6 +756,7 @@
             let childConnection = block.previousConnection;
             parentConnection.connect(childConnection);
 
+            let plasmid
             renderBlock(block);
 
         } else if(type === "Operon"){
@@ -757,7 +788,7 @@
         } else if(type === "Promoter"){
             let block = workspace.newBlock(type);
             block.setFieldValue(data[0], "GATE");
-            if(data[1] !== 0) { //0 is the value we put if there are no proteins in transcription factors
+            if(data[1] !== 0) { //si hay un 0 quiere decir que el promotor no toma ninguna proteina
                 let proteinList = [];
                 for (let i = 0; i < data[1].length; i++) {
                     proteinList[i] = workspace.newBlock("ProteinL");
@@ -776,6 +807,9 @@
         }
     }
 
+    /*
+        Funciones para renderizar un bloque o un array de bloques
+    */
     function renderBlock(block){
         block.initSvg();
         block.render();
@@ -788,7 +822,9 @@
         }
     }
 
-    //test function
+    /*
+        Funcion de prueba para debug
+    */
     function addBlock() {
         let parentBlock = workspace.newBlock("Experiment");
         parentBlock.initSvg();
