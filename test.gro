@@ -1,6 +1,6 @@
-﻿*/
+﻿/*
 Archivo .gro para probar la funcionalidad del conversor
-/*
+*/
 include gro 
 set("dt",1);set("population_max",2332123);
 genes([name:="op1",proteins:={"Prot1","Prot12"},promoter:=[function:="TRUE",transcription_factors:={"Prom1"},noise:=[toOff:=0,toOn:=0,noise_time:=0]],prot_act_times:=[times:={0,0},letiabilities:={0,0}],prot_deg_times:=[times:={0,0},letiabilities:={0,0}]]);

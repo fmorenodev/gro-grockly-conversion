@@ -558,13 +558,13 @@
         Funcion para determinar que tipo de expresion contiene cada linea de codigo
     */
     function parse(line) {
+        //ignora comentarios
         if (line.startsWith("/*")){
             comment = true;
-        } else if (line.startsWith("*/")){
-            comment = false
+        } else if (line.includes("*/")){
+            comment = false;
         } else if (comment){
             //el texto dentro del comentario se ignora
-            console.log("leyendo comentarios");
         } else if (line.startsWith("set")) {
             parseSet(line);
         } else if (line.startsWith("genes")){
@@ -582,13 +582,14 @@
         Funcion para extraer los datos necesarios para las instrucciones de tipo 'set'
     */
     function parseSet(line) {
-        let setTimes = line.match(/set/g);
-        for (let i = 0; i < setTimes.length; i++){
-            let data = line.split(";")[0];
-            data = data.split("(")[1];
-            data = data[1].split(")");
-            data = data[0];
-            console.log(data);
+        //let setTimes = line.match(/set/g);
+        let sets = line.split("set");
+        console.log(sets);
+        for (let i = 1; i < sets.length; i++){
+            /*let data = line.split("set(")[1];
+            data = data.split(");")[0];
+            console.log(data);*/
+            let data = sets[i];
             changeBlock("set", data);
         }
     }
@@ -722,9 +723,9 @@
             if (block === undefined) {
                 block = workspace.newBlock("Experiment");
             }
-            if (data.startsWith('"dt"')) {
+            if (data.startsWith('("dt"')) {
                 block.setFieldValue(data.split(",")[1], "dt");
-            } else if (data.startsWith('"population_max"')) {
+            } else if (data.startsWith('("population_max"')) {
                 block.setFieldValue(data.split(",")[1], "Mppl");
             }
             renderBlock(block);
