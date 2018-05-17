@@ -402,7 +402,8 @@
 
                 }
 
-                actionCode = actionCode + ' ' + 'action({' + conditions + codeA;
+                actionCode = actionCode + 'action({' + conditions + codeA;
+                actionCode = actionCode + "\n";
             }
 
             /**---------------------------------------------------------------------------------------------
@@ -411,9 +412,8 @@
             if (totalBlocks[t].getInput("Nutrients")) {
                 signalCode = signalCode + 'set("nutrients", 1.0);\nset("nutrients_amount",' + totalBlocks[t].getFieldValue("NAM") + ');\nset("nutrient_consumption_rate",' + totalBlocks[t].getFieldValue("NCR") + ');\nset("nutrient_grid_length",' + totalBlocks[t].getFieldValue("NGL") + ');\nset("nutrient_grid_cell_size",' + totalBlocks[t].getFieldValue("NGCS") + ');\nset("nutrient_consumption_mode",' + totalBlocks[t].getFieldValue('NCM') + ');\n';
             }
-
             if (totalBlocks[t].getInput("Signal")) {
-                signalCode = signalCode + " " + totalBlocks[t].getFieldValue("NAME") + ':= s_signal([kdiff:=' + totalBlocks[t].getFieldValue("KDIFF") + ",kdeg:=" + totalBlocks[t].getFieldValue("KDEG") + "]);\n"
+                signalCode = signalCode + totalBlocks[t].getFieldValue("NAME") + ':= s_signal([kdiff:=' + totalBlocks[t].getFieldValue("KDIFF") + ",kdeg:=" + totalBlocks[t].getFieldValue("KDEG") + "]);\n"
             }
             if (totalBlocks[t].getInput("Signal_Settings")) {
                 signalCode = signalCode + 'set("signals", 1.0);set("signals_draw",' + totalBlocks[t].getFieldValue("POWER") + ');set_param("signals_grid_length",' + totalBlocks[t].getFieldValue("LENGTH") + ');set_param("signals_grid_cell_size",' + totalBlocks[t].getFieldValue("SIZE") + ');set_param("signals_grid_neighborhood",' + totalBlocks[t].getFieldValue("NBH") + ');\n';
@@ -480,6 +480,10 @@
     //Funcion de manejo de archivos
 
     let comment = false;
+    let operons = [];
+    let plasmids = [];
+    let experiment;
+    let nutrients;
 
     document.getElementById('upload').addEventListener('change', handleFile, false);
 
@@ -501,6 +505,7 @@
                 for (let lineNo = 0; lineNo < lines.length; lineNo++) {
                     let line = lines[lineNo];
 
+                    console.log(line);
                     //funcion auxiliar para parsear cada linea de codigo
                     parse(line);
                 }
@@ -510,49 +515,6 @@
             alert("Please select a .gro file");
         }
     }
-
-    /*if (totalBlocks[t].getInput("Experiment")) {
-        expArray.push([totalBlocks[t].getFieldValue('dt'), totalBlocks[t].getFieldValue('Mppl')]);
-    }
-    if (totalBlocks[t].getInput("Ecoli")) {
-        cellArray.push([totalBlocks[t].getFieldValue('NAME'), totalBlocks[t].getFieldValue('Ncells'), totalBlocks[t].getFieldValue('x'), totalBlocks[t].getFieldValue('y'), totalBlocks[t].getFieldValue('Radius'), totalBlocks[t].getFieldValue('Volume')]);
-    }
-    if (totalBlocks[t].getInput("Plasmid")) {
-        xx = [totalBlocks[t].getSurroundParent().getFieldValue("NAME"), totalBlocks[t].getFieldValue('NAME')];
-        let des = totalBlocks[t].getDescendants();
-        for (let h = 1; h < des.length; h++) {
-            if (des[h].getInput("Operon") && des[h].getSurroundParent() == totalBlocks[t]) {
-                xx.push(des[h].getFieldValue("NAME"));
-            }
-        }
-        plasArray.push(xx);
-    }
-    if (totalBlocks[t].getInput("Operon")) {
-        operArray.push([totalBlocks[t].getFieldValue('NAME'), totalBlocks[t].getFieldValue('Nup'), totalBlocks[t].getFieldValue('Ndown'), totalBlocks[t].getFieldValue('Tnoise')]);
-    }
-    if (totalBlocks[t].getInput("Promoter")) {
-        let tt = [totalBlocks[t].getParent().getFieldValue('NAME'), totalBlocks[t].getFieldValue('GATE')];
-        for (let h = 1; h < totalBlocks[t].getDescendants().length; h++) {
-            tt.push(totalBlocks[t].getDescendants()[h].getFieldValue("NAME"));
-        }
-        promArray.push(tt);
-    }
-    if (totalBlocks[t].getInput("Protein")) {
-        if (totalBlocks[t].getParent().getInput("Operon")) {
-            protArray.push([totalBlocks[t].getParent().getFieldValue('NAME'), totalBlocks[t].getFieldValue('NAME'), totalBlocks[t].getFieldValue('Act'), totalBlocks[t].getFieldValue('Deac'), totalBlocks[t].getFieldValue('Vup'), totalBlocks[t].getFieldValue('Vdown')]);
-        }
-        if (totalBlocks[t].getParent().getInput("Protein")) {
-            let found = false;
-            let parent = totalBlocks[t].getParent();
-            while (!found) {
-                parent = parent.getParent();
-                if (parent.getInput("Operon")) {
-                    found = true;
-                    protArray.push([parent.getFieldValue('NAME'), totalBlocks[t].getFieldValue('NAME'), totalBlocks[t].getFieldValue('Act'), totalBlocks[t].getFieldValue('Deac'), totalBlocks[t].getFieldValue('Vup'), totalBlocks[t].getFieldValue('Vdown')]);
-                }
-            }
-        }
-    }*/
 
     /*
         Funcion para determinar que tipo de expresion contiene cada linea de codigo
@@ -565,6 +527,8 @@
             comment = false;
         } else if (comment){
             //el texto dentro del comentario se ignora
+        } else if (line.startsWith("action")){
+            parseAction(line);
         } else if (line.startsWith("set")) {
             parseSet(line);
         } else if (line.startsWith("genes")){
@@ -579,18 +543,30 @@
     }
 
     /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'action'
+    */
+    function parseAction(line) {
+        let sets = line.split("action");
+        console.log(sets);
+        for (let i = 1; i < sets.length; i++){
+            let data = sets[i];
+            changeBlock("action", data);
+        }
+    }
+
+    /*
         Funcion para extraer los datos necesarios para las instrucciones de tipo 'set'
     */
     function parseSet(line) {
-        //let setTimes = line.match(/set/g);
         let sets = line.split("set");
         console.log(sets);
         for (let i = 1; i < sets.length; i++){
-            /*let data = line.split("set(")[1];
-            data = data.split(");")[0];
-            console.log(data);*/
             let data = sets[i];
-            changeBlock("set", data);
+            if (data.includes("nutrient")){
+                changeBlock("nutrients", data);
+            } else {
+                changeBlock("set", data);
+            }
         }
     }
 
@@ -620,8 +596,8 @@
             tAct = tAct.split("}")[0];
             tAct = tAct.split(",");
 
-            let tDeact = aux.split("{")[1];
-            tDeact = tDeact.split("}")[0];
+            let tDeact = aux.split("},")[1];
+            tDeact = tDeact.split("{")[1];
             tDeact = tDeact.split(",");
 
             let aux2 = line.split("prot_deg_times:=[")[1];
@@ -631,8 +607,8 @@
             varUp = varUp.split("}")[0];
             varUp = varUp.split(",");
 
-            let varDown = aux2.split("{")[1];
-            varDown = varDown.split("}")[0];
+            let varDown = aux2.split("},")[1];
+            varDown = varDown.split("{")[1];
             varDown = varDown.split(",");
 
             for (let i = 0; i < data.length; i++){
@@ -688,23 +664,45 @@
     */
     function parsePlasmid(line){
         //plasmids_genes([Pl1:={"op1"},Pl2:={"op2"},Pl3:={"op3"}]);
-        let data = line.split("plasmids_genes([")[1];
-        data = data.split("]);")[0];
+        let data = line.split("[")[1];
+        data = data.split("]")[0];
+        let aux = data;
+        let temp = ["Pl1", "Pl2", "Pl3"];
+        let temp2 =["op1", ["op2", "op3"], ""];
+        for(let i = 0; i < data.length; i++){
+            plasmids.push({ plName : temp[i], opNames : temp2[i] });
+            //TODO: FIND A WAY TO EXTRACT THE DATA FROM PLASMIDS_GENES
+            /*console.log(aux);
+            console.log(i);
+            let name = aux.split(":={")[0];
+            let aux2 = aux.split("{")[i+1];
+            console.log(aux2);
+            aux2 = aux2.split("},")[0];
+            aux2 = aux2.replace(/"/g, "");
+            aux2 = aux2.split(",");
+            console.log(aux2);
+            plasmids.push({ plName : name, opNames : aux2 });
+            aux = aux.split("}")[i+1];*/
+        }
+        console.log(data);
     }
 
     /*
         Funcion para extraer los datos necesarios para las instrucciones de tipo 'c_ecolis'
     */
     function parseEcolis(line) {
-        let data = line.split("c_ecolis(")[1];
+        let data = line.split("c_ecolis");
         let params = [];
-        data = data.split(",");
-        for (let i = 0; i < 4; i++) {
-            params[i] = data[i];
+        for(let i = 1; i < data.length; i++){
+            let aux = data[i];
+            console.log(data);
+            aux = aux.split(",");
+            aux[4] = aux[4].split("{")[1].split("}")[0].replace(/"/g, "").split(","); //plasmido al que conectar
+            params[i] = aux;
+            console.log(params);
+            createBlock("Ecoli", params[i]);
         }
-        params[4] = data[4].split("{")[1].split("}")[0]; //plasmido al que conectar
-        //params[5] = data[5].split(";")[0];
-        createBlock("Ecoli", params);
+        //createBlock("Ecoli", params);
     }
 
     /*
@@ -712,23 +710,88 @@
         y poblacion maxima (population_max)
     */
     function changeBlock(type, data) {
+        console.log("change Block: " + type);
         if (type === "set") {
-            let blocks = workspace.getAllBlocks();
-            let block;
-            for (let i = 0; i < blocks.length; i++) {
-                if (blocks[i].type === "Experiment") {
-                    block = blocks[i];
-                }
+            if (experiment === undefined) {
+                experiment = workspace.newBlock("Experiment");
             }
-            if (block === undefined) {
-                block = workspace.newBlock("Experiment");
+            /*
+            set("signals", 1.0);set("signals_draw",1.0);
+            if (totalBlocks[t].getInput("Signal")) {
+                signalCode = signalCode + " " + totalBlocks[t].getFieldValue("NAME") + ':= s_signal([kdiff:=' + totalBlocks[t].getFieldValue("KDIFF") + ",kdeg:=" + totalBlocks[t].getFieldValue("KDEG") + "]);\n"
             }
+            if (totalBlocks[t].getInput("Signal_Settings")) {
+                signalCode = signalCode + 'set("signals", 1.0);set("signals_draw",' + totalBlocks[t].getFieldValue("POWER") + ');set_param("signals_grid_length",' + totalBlocks[t].getFieldValue("LENGTH") + ');set_param("signals_grid_cell_size",' + totalBlocks[t].getFieldValue("SIZE") + ');set_param("signals_grid_neighborhood",' + totalBlocks[t].getFieldValue("NBH") + ');\n';
+            }
+            if (totalBlocks[t].getInput("DumpSingle")) {
+                programCode = 'program p() :={ selected:{ dump_single( fopen(' + totalBlocks[t].getFieldValue("ROUTE") + ' <> ' + totalBlocks[t].getFieldValue("FN") + ' <> tostring((' + totalBlocks[t].getFieldValue("RT") + '+1)) <> ".csv", "w"));}};\n';
+            }*/
             if (data.startsWith('("dt"')) {
-                block.setFieldValue(data.split(",")[1], "dt");
+                experiment.setFieldValue(data.split(",")[1], "dt");
             } else if (data.startsWith('("population_max"')) {
-                block.setFieldValue(data.split(",")[1], "Mppl");
+                experiment.setFieldValue(data.split(",")[1], "Mppl");
             }
-            renderBlock(block);
+            renderBlock(experiment);
+        } else if (type === "nutrients") {
+            console.log("entering nutrients");
+            if (nutrients === undefined) {
+                nutrients = workspace.newBlock("Nutrients");
+            }
+            if (!nutrients.previousConnection.isConnected()){
+                let parentConnection = experiment.nextConnection;
+                let childConnection = nutrients.previousConnection;
+                parentConnection.connect(childConnection);
+            }
+            if (data.startsWith('("nutrients_amount"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NAM");
+            } else if (data.startsWith('("nutrient_consumption_rate"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NCR");
+            } else if (data.startsWith('("nutrient_grid_length"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            } else if (data.startsWith('("nutrient_grid_cell_size"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGCS");
+            } else if (data.startsWith('("nutrient_consumption_mode"')) {
+                nutrients.setFieldValue(data.split(",")[1].split(");")[0], "NCM");
+            }
+            renderBlock(nutrients);
+        } else if (type === "signal"){
+            
+        } else if (type === "action"){
+
+            /*
+
+    if (des[h].getInput("Paint")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("Fst") + '","' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("Thr") + '","' + des[h].getFieldValue("Fhr") + '"});'
+    }
+    if (des[h].getInput("Paint2")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{' + des[h].getFieldValue("COLOUR") + '});'
+    }
+    if (des[h].getInput("Conjugate")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("NAME") + '","' + des[h].getFieldValue("ratio") + '"});'
+    }
+    if (des[h].getInput("ActionR1")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("NAME") + '"});'
+    }
+    if (des[h].getInput("ActionR2")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{tostring(' + des[h].getFieldValue("ID") + '),"' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("eTYPE") + '"});'
+    }
+    if (des[h].getInput("ActionR3")) {
+        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{tostring(' + des[h].getFieldValue("ID") + '),"' + des[h].getFieldValue("COMPARISON") + '","' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("PROTEIN") + '"});'
+    }*/
+            /*action({"Name"},"s_emit_signal",{tostring(Signal ID),"0","exact"});
+            action({"Name"},"s_absorb_QS",{tostring(Signal ID),">","0","PROTEIN"});
+            action({"Name"},"lose_plasmid",{"Plasmid"});*/
+            if (data.includes('("lose_plasmid"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            } else if (data.includes('("s_absorb_QS"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            } else if (data.includes('("s_emit_signal"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            } else if (data.includes('("paint"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            } else if (data.includes('("conjugate"')) {
+                nutrients.setFieldValue(data.split(",")[1], "NGL");
+            }
         }
     }
 
@@ -739,9 +802,10 @@
     function createBlock(type, data) {
         console.log("Create Block: " + type);
         console.log(data);
+        //tambien creamos el plasmido aqui porque el nombre del plasmido aparece en el bloque c_ecolis
         if (type === "Ecoli") {
             let block = workspace.newBlock(type);
-            block.setFieldValue(data[0], "Ncells");
+            block.setFieldValue(data[0].split("(")[1], "Ncells");
             block.setFieldValue(data[1], "x");
             block.setFieldValue(data[2], "y");
             block.setFieldValue(data[3], "Radius");
@@ -753,12 +817,48 @@
                     parentBlock = blocks[i];
                 }
             }
+            //conexion de experiment con ecoli
             let parentConnection = parentBlock.getInput('Experiment').connection;
             let childConnection = block.previousConnection;
             parentConnection.connect(childConnection);
 
-            let plasmid
+            //creacion de plasmid
+            let plasmidBlock = workspace.newBlock("Plasmid");
+            plasmidBlock.setFieldValue(data[4], "NAME");
+
+            let plasmidName;
+            let operonsInPlasmid;
+            for(let i = 0; i < plasmids.length; i++){
+                if (plasmids[i].plName === data[4]){
+                    plasmidName = plasmids[i].plName;
+                    operonsInPlasmid = plasmids[i].opNames;
+                }
+            }
+
+            //conexion de ecoli con plasmid
+            let parentConnection2 = block.getInput('Ecoli').connection;
+            let childConnection2 = plasmidBlock.previousConnection;
+            parentConnection2.connect(childConnection2);
+
+            //conexion de plasmid con operon
+            if(plasmidName !== undefined && operonsInPlasmid !== undefined) {
+                let parentConnection3 = plasmidBlock.getInput('Plasmid').connection;
+                for (let i = 0; i < operons.length; i++) {
+                    for (let j = 0; j < operonsInPlasmid.length; j++) {
+                        console.log(operons[i].name);
+                        console.log(operonsInPlasmid[j]);
+                        if (operons[i].name === operonsInPlasmid[j]) {
+                            console.log("Attempting connection");
+                            console.log(workspace.getBlockById(operons[i].id));
+                            let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
+                            parentConnection3.connect(childConnection3);
+                        }
+                    }
+                }
+            }
+
             renderBlock(block);
+            renderBlock(plasmidBlock);
 
         } else if(type === "Operon"){
             let block = workspace.newBlock(type);
@@ -767,7 +867,8 @@
             block.setFieldValue(data[2], "Ndown");
             block.setFieldValue(data[3], "Tnoise");
 
-            //connection to Plasmid
+            operons.push({id : block.id, name : data[0]});
+            console.log(operons);
 
             renderBlock(block);
 
@@ -796,7 +897,7 @@
                     proteinList[i].setFieldValue(data[1][i], "NAME");
 
                     let parentConnection = block.getInput('ProteinL').connection;
-                    let childConnection = proteinList.previousConnection;
+                    let childConnection = proteinList.outputConnection;
                     parentConnection.connect(childConnection);
                 }
                 renderBlocks(proteinList);
