@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress JSAnnotator -->
 <html>
 <head>
     <meta charset="utf-8">
@@ -490,7 +491,7 @@
     function handleFile(event) {
 
         if (!confirm("If you load a gro file, it will be automatically converted and your current code" +
-            " will be deleted. Please save your workspace first. Are you sure you want to continue?")) return alert;
+                " will be deleted. Please save your workspace first. Are you sure you want to continue?")) return alert;
 
         let files = event.target.files; // FileList object
         let file = files[0];
@@ -550,7 +551,7 @@
         console.log(sets);
         for (let i = 1; i < sets.length; i++){
             let data = sets[i];
-            changeBlock("action", data);
+            createBlock("Action", data);
         }
     }
 
@@ -702,7 +703,6 @@
             console.log(params);
             createBlock("Ecoli", params[i]);
         }
-        //createBlock("Ecoli", params);
     }
 
     /*
@@ -754,44 +754,6 @@
                 nutrients.setFieldValue(data.split(",")[1].split(");")[0], "NCM");
             }
             renderBlock(nutrients);
-        } else if (type === "signal"){
-            
-        } else if (type === "action"){
-
-            /*
-
-    if (des[h].getInput("Paint")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("Fst") + '","' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("Thr") + '","' + des[h].getFieldValue("Fhr") + '"});'
-    }
-    if (des[h].getInput("Paint2")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{' + des[h].getFieldValue("COLOUR") + '});'
-    }
-    if (des[h].getInput("Conjugate")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("NAME") + '","' + des[h].getFieldValue("ratio") + '"});'
-    }
-    if (des[h].getInput("ActionR1")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{"' + des[h].getFieldValue("NAME") + '"});'
-    }
-    if (des[h].getInput("ActionR2")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{tostring(' + des[h].getFieldValue("ID") + '),"' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("eTYPE") + '"});'
-    }
-    if (des[h].getInput("ActionR3")) {
-        codeA = '},"' + des[h].getFieldValue("TYPE") + '",{tostring(' + des[h].getFieldValue("ID") + '),"' + des[h].getFieldValue("COMPARISON") + '","' + des[h].getFieldValue("Snd") + '","' + des[h].getFieldValue("PROTEIN") + '"});'
-    }*/
-            /*action({"Name"},"s_emit_signal",{tostring(Signal ID),"0","exact"});
-            action({"Name"},"s_absorb_QS",{tostring(Signal ID),">","0","PROTEIN"});
-            action({"Name"},"lose_plasmid",{"Plasmid"});*/
-            if (data.includes('("lose_plasmid"')) {
-                nutrients.setFieldValue(data.split(",")[1], "NGL");
-            } else if (data.includes('("s_absorb_QS"')) {
-                nutrients.setFieldValue(data.split(",")[1], "NGL");
-            } else if (data.includes('("s_emit_signal"')) {
-                nutrients.setFieldValue(data.split(",")[1], "NGL");
-            } else if (data.includes('("paint"')) {
-                nutrients.setFieldValue(data.split(",")[1], "NGL");
-            } else if (data.includes('("conjugate"')) {
-                nutrients.setFieldValue(data.split(",")[1], "NGL");
-            }
         }
     }
 
@@ -905,6 +867,62 @@
 
             //connection to operon
 
+            renderBlock(block);
+
+        } else if (type === "action"){
+
+            let block = workspace.newBlock(type);
+            let aux = data.split("action(")[1];
+            aux = aux.replace(/"/g, "");
+            aux = aux.split(");")[0];
+            aux = aux.split(",");
+            console.log(aux);
+            let protBlock = workspace.newBlock("ProteinL");
+            let actionBlock;
+            protBlock.setFieldValue(aux[0], "NAME");
+            block.setFieldValue(aux[1], "TYPE");
+            if (aux[2] === "paint") {
+                if(aux.length === 3){
+                    actionBlock = workspace.newBlock("Paint2");
+                    actionBlock.setFieldValue(aux[2], "COLOUR");
+                } else {
+                    actionBlock = workspace.newBlock("Paint");
+                    actionBlock.setFieldValue(aux[2], "Fst");
+                    actionBlock.setFieldValue(aux[3], "Snd");
+                    actionBlock.setFieldValue(aux[4], "Thr");
+                    actionBlock.setFieldValue(aux[5], "Fhr");
+                }
+            } else if (aux[2] === "conjugate") {
+                actionBlock = workspace.newBlock("Conjugate");
+                actionBlock.setFieldValue(aux[2], "NAME");
+                actionBlock.setFieldValue(aux[3], "ratio");
+            } else if (aux[2] === "lose_plasmid") {
+                actionBlock = workspace.newBlock("ActionR1");
+                actionBlock.setFieldValue(aux[2], "NAME");
+            } else if (aux[2] === "s_emit_signal") {
+                actionBlock = workspace.newBlock("ActionR2");
+                actionBlock.setFieldValue(aux[2], "ID");
+                actionBlock.setFieldValue(aux[3], "Snd");
+                actionBlock.setFieldValue(aux[4], "eTYPE");
+            } else if (aux[2] === "s_absorb_QS") {
+                actionBlock = workspace.newBlock("ActionR3");
+                actionBlock.setFieldValue(aux[2], "ID");
+                actionBlock.setFieldValue(aux[3], "COMPARISON");
+                actionBlock.setFieldValue(aux[4], "Snd");
+                actionBlock.setFieldValue(aux[5], "PROTEIN");
+            }
+            //Conexion de bloque Action con bloque de accion interior
+            let parentConnection = block.getInput('Action').connection;
+            let childConnection = actionBlock.previousConnection;
+            parentConnection.connect(childConnection);
+
+            //Conexion de bloque Action con bloque ProteinL
+            let parentConnection2 = block.getInput('ProteinL').connection;
+            let childConnection2 = protBlock.previousConnection;
+            parentConnection2.connect(childConnection2);
+
+            renderBlock(actionBlock);
+            renderBlock(protBlock);
             renderBlock(block);
         }
     }
