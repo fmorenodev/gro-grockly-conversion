@@ -12,17 +12,17 @@ TO-DO LIST:
   * generate each type of block
     * ~~Experiment~~ 
     * ~~Ecoli~~
-    * Plasmid
+    * ~~Plasmid~~
     * ~~Operon~~
     * ~~Promoter~~
     * ~~Protein~~
     * ~~ProteinL (for promoter)~~
     * Actions
-    * Nutrients
+    * ~~Nutrients~~
     * Signals
   * Connect blocks 
     * ~~Experiment~~
-    * Ecoli
+    * ~~Ecoli~~
     * Plasmid
     * Operon
     * Promoter
