@@ -5,7 +5,7 @@
  */
 Blockly.Blocks['Action'] = {
   init: function() {
-   this.appendValueInput("Action")
+   this.appendValueInput("ProteinL")
         .appendField("Action")
         .setCheck(["ProteinL","Conjugate"]);
     this.appendValueInput("Action")

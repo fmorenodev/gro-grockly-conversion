@@ -23,9 +23,12 @@
 
 </head>
 <body>
+<script>
+    let screenSize = screen.height - 100;
+</script>
 <!--Entorno de Bloques-->
 <div id="blocklyDiv"
-     style="position:  relative; width: 100%; top: 0; left: 0; background:  #ccc; float: left;  height: 500px;"></div>
+     style="position:  relative; width: 100%; top: 0; left: 0; background:  #ccc; float: left;  height: 90vh;"></div>
 <!--Entorno de Salida de codigo-->
 <!--<div id="groDiv"
      style="position:  relative; width: 40%; top: 0; right: 0; background: #ddf; float: right; height: 650px; overflow:scroll;"></div>-->
@@ -547,7 +550,7 @@
         Funcion para extraer los datos necesarios para las instrucciones de tipo 'action'
     */
     function parseAction(line) {
-        let sets = line.split("action");
+        let sets = line.split("action(");
         console.log(sets);
         for (let i = 1; i < sets.length; i++){
             let data = sets[i];
@@ -858,30 +861,32 @@
                     proteinList[i] = workspace.newBlock("ProteinL");
                     proteinList[i].setFieldValue(data[1][i], "NAME");
 
+                    renderBlock(proteinList[i]);
                     let parentConnection = block.getInput('ProteinL').connection;
-                    let childConnection = proteinList.outputConnection;
+                    let childConnection = proteinList[i].outputConnection;
                     parentConnection.connect(childConnection);
                 }
-                renderBlocks(proteinList);
+                //renderBlocks(proteinList);
             }
 
             //connection to operon
 
             renderBlock(block);
 
-        } else if (type === "action"){
+        } else if (type === "Action"){
 
             let block = workspace.newBlock(type);
-            let aux = data.split("action(")[1];
-            aux = aux.replace(/"/g, "");
+            let aux = data.replace(/"/g, "").replace(/{/g, "").replace(/}/g, "");
             aux = aux.split(");")[0];
             aux = aux.split(",");
             console.log(aux);
             let protBlock = workspace.newBlock("ProteinL");
             let actionBlock;
+            console.log(aux[0]);
             protBlock.setFieldValue(aux[0], "NAME");
-            block.setFieldValue(aux[1], "TYPE");
-            if (aux[2] === "paint") {
+            protBlock.getField("NAME");
+            console.log(block);
+            if (aux[1] === "paint" || aux[1] === "d_paint") {
                 if(aux.length === 3){
                     actionBlock = workspace.newBlock("Paint2");
                     actionBlock.setFieldValue(aux[2], "COLOUR");
@@ -892,37 +897,50 @@
                     actionBlock.setFieldValue(aux[4], "Thr");
                     actionBlock.setFieldValue(aux[5], "Fhr");
                 }
-            } else if (aux[2] === "conjugate") {
+            } else if (aux[1] === "conjugate" || aux[1] === "conjugate_directed") {
                 actionBlock = workspace.newBlock("Conjugate");
                 actionBlock.setFieldValue(aux[2], "NAME");
                 actionBlock.setFieldValue(aux[3], "ratio");
-            } else if (aux[2] === "lose_plasmid") {
+            } else if (aux[1] === "lose_plasmid" || aux[1] === "set_eex" || aux[1] === "remove_eex") {
                 actionBlock = workspace.newBlock("ActionR1");
                 actionBlock.setFieldValue(aux[2], "NAME");
-            } else if (aux[2] === "s_emit_signal") {
+            } else if (aux[1] === "s_emit_signal" || aux[1] === "s_emit_cf") {
                 actionBlock = workspace.newBlock("ActionR2");
+                if(aux[2].includes("tostring")){
+                    aux[2] = aux[2].replace("tostring(", "").replace(")", "");
+                }
                 actionBlock.setFieldValue(aux[2], "ID");
                 actionBlock.setFieldValue(aux[3], "Snd");
                 actionBlock.setFieldValue(aux[4], "eTYPE");
-            } else if (aux[2] === "s_absorb_QS") {
+            } else if (aux[1] === "s_absorb_QS" || aux[1] === "s_get_QS") {
                 actionBlock = workspace.newBlock("ActionR3");
+                if(aux[2].includes("tostring")){
+                    aux[2] = aux[2].replace("tostring(", "").replace(")", "");
+                }
                 actionBlock.setFieldValue(aux[2], "ID");
                 actionBlock.setFieldValue(aux[3], "COMPARISON");
                 actionBlock.setFieldValue(aux[4], "Snd");
                 actionBlock.setFieldValue(aux[5], "PROTEIN");
             }
-            //Conexion de bloque Action con bloque de accion interior
-            let parentConnection = block.getInput('Action').connection;
-            let childConnection = actionBlock.previousConnection;
-            parentConnection.connect(childConnection);
 
-            //Conexion de bloque Action con bloque ProteinL
-            let parentConnection2 = block.getInput('ProteinL').connection;
-            let childConnection2 = protBlock.previousConnection;
-            parentConnection2.connect(childConnection2);
+            if(actionBlock !== undefined) {
 
-            renderBlock(actionBlock);
-            renderBlock(protBlock);
+                //Conexion de bloque Action con bloque ProteinL
+                renderBlock(protBlock);
+                let parentConnection2 = block.getInput('ProteinL').connection;
+                let childConnection2 = protBlock.outputConnection;
+                parentConnection2.connect(childConnection2);
+
+
+                //Conexion de bloque Action con bloque de accion interior
+                renderBlock(actionBlock);
+                let parentConnection = block.getInput('Action').connection;
+                let childConnection = actionBlock.outputConnection;
+                parentConnection.connect(childConnection);
+
+
+            }
+            //renderBlock(protBlock);
             renderBlock(block);
         }
     }
