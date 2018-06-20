@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<!--suppress JSAnnotator -->
 <html>
 <head>
     <meta charset="utf-8">
-    <!-- Autores: Aitor Moya Lopez (Grockly) and Fernando Moreno Bendala (Gro to Grockly conversion) -->
+    <!-- Autores: Aitor Moya Lopez (Grockly) and Fernando Moreno Bendala (Traductor Gro a Grockly) -->
     <title>Grockly Web Simulator</title>
 
     <!-- Librerias de blockly-->
@@ -467,10 +466,6 @@
 
 </script>
 
-<!--form enctype="multipart/form-data" method="post" name="fileinfo">
-  <label for="file"><img id="imgLoad" src="icons/open.png" alt="Load a .gro file" title="Open a .gro file" /></label>
-  <input id="file" class="inputfile" type="file" name="file"  alt="Load a .gro file" title="Open a .gro file" />
-</form-->
 <button type="button" onclick="addBlock()">Generate Block</button>
 <button type="button" onclick="myGenerator()">Generate!</button>
 <button id="save-btn">Save</button>
@@ -481,13 +476,23 @@
 
 <script>
 
-    //Funcion de manejo de archivos
+    /*
+        TRADUCTOR DE GRO A GROCKLY
+    */
 
-    let comment = false;
-    let operons = [];
-    let plasmids = [];
+    //variables globales del programa
+    let comment;
+    let operons;
+    let plasmids;
+    let actions;
     let experiment;
     let nutrients;
+    let signals;
+    let dumpSingle;
+
+    /*
+        Funcion de manejo de archivos
+    */
 
     document.getElementById('upload').addEventListener('change', handleFile, false);
 
@@ -495,6 +500,9 @@
 
         if (!confirm("If you load a gro file, it will be automatically converted and your current code" +
                 " will be deleted. Please save your workspace first. Are you sure you want to continue?")) return alert;
+
+        document.getElementById('upload').removeEventListener('change', handleFile, false);
+        document.getElementById('upload').addEventListener('change', handleFile, false);
 
         let files = event.target.files; // FileList object
         let file = files[0];
@@ -504,6 +512,15 @@
             let reader = new FileReader();
             reader.onload = function () {
                 workspace.clear();
+                comment = false;
+                operons = [];
+                plasmids = [];
+                actions = [];
+                experiment = undefined;
+                nutrients = undefined;
+                signals = undefined;
+                dumpSingle = undefined;
+
 
                 let lines = this.result.split('\n');
                 for (let lineNo = 0; lineNo < lines.length; lineNo++) {
@@ -535,6 +552,8 @@
             parseAction(line);
         } else if (line.startsWith("set")) {
             parseSet(line);
+        } else if (line.includes("s_signal")){
+            parseSignal(line);
         } else if (line.startsWith("genes")){
             parseOperon(line);
         } else if (line.startsWith("plasmids_genes")){
@@ -542,6 +561,8 @@
         } else if (line.startsWith("program")) {
             if (line.includes("c_ecolis")) {
                 parseEcolis(line);
+            }else if (line.includes("dump_single")){
+                parseDumpSingle(line);
             }
         }
     }
@@ -551,10 +572,12 @@
     */
     function parseAction(line) {
         let sets = line.split("action(");
-        console.log(sets);
         for (let i = 1; i < sets.length; i++){
             let data = sets[i];
-            createBlock("Action", data);
+            let aux = data.replace(/"/g, "").replace(/{/g, "").replace(/}/g, "");
+            aux = aux.split(");")[0];
+            aux = aux.split(",");
+            createBlock("Action", aux);
         }
     }
 
@@ -563,15 +586,29 @@
     */
     function parseSet(line) {
         let sets = line.split("set");
-        console.log(sets);
         for (let i = 1; i < sets.length; i++){
             let data = sets[i];
             if (data.includes("nutrient")){
                 changeBlock("nutrients", data);
+            } else if(data.includes("signals")){
+                changeBlock("signal_settings", data);
             } else {
                 changeBlock("set", data);
             }
         }
+    }
+
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 's_signal'
+    */
+    function parseSignal(line) {
+        let data = line.split(":=");
+        let params = [];
+        params[0] = data[0].replace(/ /g, "");
+        data = line.split(",");
+        params[1] = data[0].split("kdiff:=")[1];
+        params[2] = data[1].split(":=")[1].split("]")[0];
+        createBlock("Signal", params);
     }
 
     /*
@@ -580,6 +617,8 @@
     */
     function parseOperon(line){
         let operonData = [];
+        let proteinData = [];
+        let promoterData = [];
         if(line.includes("name")){
             let name = line.split("name:=")[1];
             name = name.split(',')[0];
@@ -587,7 +626,6 @@
             operonData[0] = name;
         }
         if(line.includes("proteins")){
-            let proteinData = [];
             let data = line.split("proteins:={")[1];
             data = data.split("}")[0];
             data = data.replace(/"/g, "");
@@ -619,11 +657,8 @@
                 //nombre, tact, varup, tdeact, vardown
                 proteinData[i]=[data[i], tAct[i], varUp[i], tDeact[i], varDown[i]];
             }
-            console.log(proteinData);
-            createBlock("Protein", proteinData);
         }
         if(line.includes("promoter")){
-            let promoterData = [];
             let data = line.split("promoter:=[")[1];
             data = data.split("]")[0];
 
@@ -656,39 +691,30 @@
                 operonData[2] = noise[1];
                 operonData[3] = noise[2];
             }
-            console.log(promoterData);
-            createBlock("Promoter", promoterData);
         }
-        console.log(operonData);
-        createBlock("Operon", operonData);
+        createOperonBlock(operonData, promoterData, proteinData);
     }
 
     /*
         Funcion para extraer los datos necesarios para las instrucciones de tipo 'plasmids_genes'
     */
     function parsePlasmid(line){
-        //plasmids_genes([Pl1:={"op1"},Pl2:={"op2"},Pl3:={"op3"}]);
         let data = line.split("[")[1];
         data = data.split("]")[0];
-        let aux = data;
-        let temp = ["Pl1", "Pl2", "Pl3"];
-        let temp2 =["op1", ["op2", "op3"], ""];
-        for(let i = 0; i < data.length; i++){
-            plasmids.push({ plName : temp[i], opNames : temp2[i] });
-            //TODO: FIND A WAY TO EXTRACT THE DATA FROM PLASMIDS_GENES
-            /*console.log(aux);
-            console.log(i);
-            let name = aux.split(":={")[0];
-            let aux2 = aux.split("{")[i+1];
-            console.log(aux2);
-            aux2 = aux2.split("},")[0];
-            aux2 = aux2.replace(/"/g, "");
-            aux2 = aux2.split(",");
-            console.log(aux2);
-            plasmids.push({ plName : name, opNames : aux2 });
-            aux = aux.split("}")[i+1];*/
+        /*for(let i = 0; i < 3; i++) {
+            let temp = ["P1", "P3", "P2"];
+            let temp2 = ["O1", ["O2", "O3"], "O3"];
+            plasmids.push({plName: temp[i], opNames: temp2[i]});
+        }*/
+        let aux2 = data.split("},");
+        for(let i = 0; i < aux2.length; i++){
+            let name = aux2[i].split(":={")[0];
+            let operons = aux2[i].split(":={")[1].replace(/"/g, '').replace(/}/g, '');
+            if(operons.includes(",")){
+                operons = operons.split(",");
+            }
+            plasmids.push({ plName : name, opNames : operons });
         }
-        console.log(data);
     }
 
     /*
@@ -699,13 +725,41 @@
         let params = [];
         for(let i = 1; i < data.length; i++){
             let aux = data[i];
-            console.log(data);
             aux = aux.split(",");
-            aux[4] = aux[4].split("{")[1].split("}")[0].replace(/"/g, "").split(","); //plasmido al que conectar
+            aux.pop();
+            for(let j = 4; j < aux.length; j++) {
+                if(aux[j].includes("{")){
+                    aux[j] = aux[j].split("{")[1];
+                }
+                if(aux[j].includes("}")){
+                    aux[j] = aux[j].split("}")[0];
+                }
+                aux[j] = aux[j].replace(/"/g, "");
+            }
             params[i] = aux;
-            console.log(params);
             createBlock("Ecoli", params[i]);
         }
+    }
+
+    /*
+        Funcion para extraer los datos necesarios para las instrucciones de tipo 'dump_single'
+    */
+    function parseDumpSingle(line) {
+        let data = line.split("dump_single")[1];
+        data = data.split(" <> ");
+        let params = [];
+        params[0] = data[0].split("fopen(")[1].replace(/ /g, "");
+        params[1] = data[1];
+        if(data[2].includes("tostring(")){
+            params[2] = data[2].split("tostring")[1].split("+")[0].replace("(", "");
+            params[2] = params[2].replace("(", "");
+        } else if(data[2].includes("toString(")){
+            params[2] = data[2].split("toString")[1].split("+")[0].replace("(", "");
+            params[2] = params[2].replace("(", "");
+        }else{
+            params[2] = data[2];
+        }
+        createBlock("DumpSingle", params);
     }
 
     /*
@@ -718,17 +772,7 @@
             if (experiment === undefined) {
                 experiment = workspace.newBlock("Experiment");
             }
-            /*
-            set("signals", 1.0);set("signals_draw",1.0);
-            if (totalBlocks[t].getInput("Signal")) {
-                signalCode = signalCode + " " + totalBlocks[t].getFieldValue("NAME") + ':= s_signal([kdiff:=' + totalBlocks[t].getFieldValue("KDIFF") + ",kdeg:=" + totalBlocks[t].getFieldValue("KDEG") + "]);\n"
-            }
-            if (totalBlocks[t].getInput("Signal_Settings")) {
-                signalCode = signalCode + 'set("signals", 1.0);set("signals_draw",' + totalBlocks[t].getFieldValue("POWER") + ');set_param("signals_grid_length",' + totalBlocks[t].getFieldValue("LENGTH") + ');set_param("signals_grid_cell_size",' + totalBlocks[t].getFieldValue("SIZE") + ');set_param("signals_grid_neighborhood",' + totalBlocks[t].getFieldValue("NBH") + ');\n';
-            }
-            if (totalBlocks[t].getInput("DumpSingle")) {
-                programCode = 'program p() :={ selected:{ dump_single( fopen(' + totalBlocks[t].getFieldValue("ROUTE") + ' <> ' + totalBlocks[t].getFieldValue("FN") + ' <> tostring((' + totalBlocks[t].getFieldValue("RT") + '+1)) <> ".csv", "w"));}};\n';
-            }*/
+
             if (data.startsWith('("dt"')) {
                 experiment.setFieldValue(data.split(",")[1], "dt");
             } else if (data.startsWith('("population_max"')) {
@@ -736,7 +780,6 @@
             }
             renderBlock(experiment);
         } else if (type === "nutrients") {
-            console.log("entering nutrients");
             if (nutrients === undefined) {
                 nutrients = workspace.newBlock("Nutrients");
             }
@@ -757,6 +800,30 @@
                 nutrients.setFieldValue(data.split(",")[1].split(");")[0], "NCM");
             }
             renderBlock(nutrients);
+        } else if (type === "signal_settings"){
+            if(signals === undefined){
+                signals = workspace.newBlock("Signal_Settings");
+            }
+            if (!signals.previousConnection.isConnected() && nutrients === undefined){
+                let parentConnection = experiment.nextConnection;
+                let childConnection = signals.previousConnection;
+                parentConnection.connect(childConnection);
+            } else if(nutrients !== undefined){
+                let parentConnection = nutrients.nextConnection;
+                let childConnection = signals.previousConnection;
+                parentConnection.connect(childConnection);
+            }
+
+            if (data.startsWith('("signals_draw"')) {
+                signals.setFieldValue(data.split(",")[1].replace(");", ""), "POWER");
+            } else if (data.startsWith('_param("signals_grid_length"')) {
+                signals.setFieldValue(data.split(",")[1], "LENGTH");
+            } else if (data.startsWith('_param("signals_grid_cell_size"')) {
+                signals.setFieldValue(data.split(",")[1], "SIZE");
+            } else if (data.startsWith('_param("signals_grid_neighborhood"')) {
+                signals.setFieldValue(data.split(",")[1], "NBH");
+            }
+            renderBlock(signals);
         }
     }
 
@@ -766,7 +833,6 @@
      */
     function createBlock(type, data) {
         console.log("Create Block: " + type);
-        console.log(data);
         //tambien creamos el plasmido aqui porque el nombre del plasmido aparece en el bloque c_ecolis
         if (type === "Ecoli") {
             let block = workspace.newBlock(type);
@@ -775,174 +841,312 @@
             block.setFieldValue(data[2], "y");
             block.setFieldValue(data[3], "Radius");
 
-            let parentBlock;
-            let blocks = workspace.getAllBlocks();
-            for (let i = 0; i < blocks.length; i++) {
-                if (blocks[i].type === "Experiment") {
-                    parentBlock = blocks[i];
-                }
-            }
             //conexion de experiment con ecoli
-            let parentConnection = parentBlock.getInput('Experiment').connection;
+            let parentConnection = experiment.getInput('Experiment').connection;
             let childConnection = block.previousConnection;
             parentConnection.connect(childConnection);
 
             //creacion de plasmid
-            let plasmidBlock = workspace.newBlock("Plasmid");
-            plasmidBlock.setFieldValue(data[4], "NAME");
+            if(data.length === 5){
+                let plasmidLocal = workspace.newBlock("Plasmid");
+                plasmidLocal.setFieldValue(data[4], "NAME");
 
-            let plasmidName;
-            let operonsInPlasmid;
-            for(let i = 0; i < plasmids.length; i++){
-                if (plasmids[i].plName === data[4]){
-                    plasmidName = plasmids[i].plName;
-                    operonsInPlasmid = plasmids[i].opNames;
+                //conexion de ecoli con plasmid
+                renderBlock(plasmidLocal);
+
+                let plasmidName;
+                let operonsInPlasmid;
+                for(let i = 0; i < plasmids.length; i++){
+                    if (plasmids[i].plName === plasmidLocal.getInput("Plasmid").fieldRow[1].getText()){
+                        plasmidName = plasmids[i].plName;
+                        operonsInPlasmid = plasmids[i].opNames;
+                    }
                 }
-            }
 
-            //conexion de ecoli con plasmid
-            let parentConnection2 = block.getInput('Ecoli').connection;
-            let childConnection2 = plasmidBlock.previousConnection;
-            parentConnection2.connect(childConnection2);
-
-            //conexion de plasmid con operon
-            if(plasmidName !== undefined && operonsInPlasmid !== undefined) {
-                let parentConnection3 = plasmidBlock.getInput('Plasmid').connection;
-                for (let i = 0; i < operons.length; i++) {
-                    for (let j = 0; j < operonsInPlasmid.length; j++) {
-                        console.log(operons[i].name);
-                        console.log(operonsInPlasmid[j]);
-                        if (operons[i].name === operonsInPlasmid[j]) {
-                            console.log("Attempting connection");
-                            console.log(workspace.getBlockById(operons[i].id));
-                            let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
-                            parentConnection3.connect(childConnection3);
+                //conexion de plasmid con operon
+                if(plasmidName !== undefined && operonsInPlasmid !== undefined) {
+                    let parentConnection3 = plasmidLocal.getInput('Plasmid').connection;
+                    for (let i = 0; i < operons.length; i++) {
+                        if (operonsInPlasmid.constructor === Array) {
+                            for (let j = 0; j < operonsInPlasmid.length; j++) {
+                                if (operons[i].name === operonsInPlasmid[j]) {
+                                    operonsInPlasmid.splice(j, 1);
+                                    let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
+                                    parentConnection3.connect(childConnection3);
+                                }
+                            }
+                        } else {
+                            if (operons[i].name === operonsInPlasmid) {
+                                operonsInPlasmid = "";
+                                let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
+                                parentConnection3.connect(childConnection3);
+                            }
                         }
                     }
                 }
-            }
 
-            renderBlock(block);
-            renderBlock(plasmidBlock);
+                let parentConnection2 = block.getInput('Ecoli').connection;
+                let childConnection2 = plasmidLocal.previousConnection;
+                parentConnection2.connect(childConnection2);
 
-        } else if(type === "Operon"){
-            let block = workspace.newBlock(type);
-            block.setFieldValue(data[0], "NAME");
-            block.setFieldValue(data[1], "Nup");
-            block.setFieldValue(data[2], "Ndown");
-            block.setFieldValue(data[3], "Tnoise");
+            }else if(data.length > 5){
+                let plasmidsLocal = [];
+                for (let y = 0; y < data.length-4; y++) {
+                    plasmidsLocal[y] = workspace.newBlock("Plasmid");
+                    plasmidsLocal[y].setFieldValue(data[y+4], "NAME");
+                    renderBlock(plasmidsLocal[y]);
 
-            operons.push({id : block.id, name : data[0]});
-            console.log(operons);
+                    let plasmidNames;
+                    let operonsInPlasmid;
+                    for(let j = 0; j < plasmids.length; j++){
+                        if (plasmids[j].plName === plasmidsLocal[y].getInput("Plasmid").fieldRow[1].getText()){
+                            plasmidNames = plasmids[j].plName;
+                            operonsInPlasmid = plasmids[j].opNames;
+                        }
+                    }
+                    //conexion de plasmid con operon
+                    let parentConnection3 = plasmidsLocal[y].getInput('Plasmid').connection;
+                    for (let i = 0; i < operons.length; i++) {
+                        if (operonsInPlasmid.constructor === Array) {
+                            for (let j = 0; j < operonsInPlasmid.length; j++) {
+                                if (operons[i].name === operonsInPlasmid[j]) {
+                                    if(!workspace.getBlockById(operons[i].id).previousConnection.isConnected()) {
+                                        operonsInPlasmid.splice(j, 1);
+                                        let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
+                                        parentConnection3.connect(childConnection3);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (operons[i].name === operonsInPlasmid) {
+                                if(!workspace.getBlockById(operons[i].id).previousConnection.isConnected()) {
+                                    operonsInPlasmid = "";
+                                    let childConnection3 = workspace.getBlockById(operons[i].id).previousConnection;
+                                    parentConnection3.connect(childConnection3);
+                                }
+                            }
+                        }
+                    }
 
-            renderBlock(block);
+                    //conexion de ecoli con plasmid
+                    if (y !== 0) {
+                        let parentConnection2 = plasmidsLocal[y-1].nextConnection;
+                        let childConnection2 = plasmidsLocal[y].previousConnection;
+                        parentConnection2.connect(childConnection2);
+                    }
+                    if(y === data.length-5){
+                        let parentConnection2 = block.getInput('Ecoli').connection;
+                        let childConnection2 = plasmidsLocal[0].previousConnection;
+                        parentConnection2.connect(childConnection2);
 
-        } else if(type === "Protein"){
-            let blocks = [];
-            for(let i = 0; i < data.length; i++) {
-                blocks[i] = workspace.newBlock(type);
-                blocks[i].setFieldValue(data[i][0], "NAME");
-                blocks[i].setFieldValue(data[i][1], "Act");
-                blocks[i].setFieldValue(data[i][2], "Deac");
-                blocks[i].setFieldValue(data[i][3], "Vup");
-                blocks[i].setFieldValue(data[i][4], "Vdown");
-            }
+                    }
 
-            //connection to operon
-
-            renderBlocks(blocks);
-
-        } else if(type === "Promoter"){
-            let block = workspace.newBlock(type);
-            block.setFieldValue(data[0], "GATE");
-            if(data[1] !== 0) { //si hay un 0 quiere decir que el promotor no toma ninguna proteina
-                let proteinList = [];
-                for (let i = 0; i < data[1].length; i++) {
-                    proteinList[i] = workspace.newBlock("ProteinL");
-                    proteinList[i].setFieldValue(data[1][i], "NAME");
-
-                    renderBlock(proteinList[i]);
-                    let parentConnection = block.getInput('ProteinL').connection;
-                    let childConnection = proteinList[i].outputConnection;
-                    parentConnection.connect(childConnection);
                 }
-                //renderBlocks(proteinList);
             }
-
-            //connection to operon
 
             renderBlock(block);
 
         } else if (type === "Action"){
 
             let block = workspace.newBlock(type);
-            let aux = data.replace(/"/g, "").replace(/{/g, "").replace(/}/g, "");
-            aux = aux.split(");")[0];
-            aux = aux.split(",");
-            console.log(aux);
+            actions.push(block);
             let protBlock = workspace.newBlock("ProteinL");
             let actionBlock;
-            console.log(aux[0]);
-            protBlock.setFieldValue(aux[0], "NAME");
+            protBlock.setFieldValue(data[0], "NAME");
             protBlock.getField("NAME");
-            console.log(block);
-            if (aux[1] === "paint" || aux[1] === "d_paint") {
-                if(aux.length === 3){
+            if (data[1] === "paint" || data[1] === "d_paint") {
+                if(data.length === 3){
                     actionBlock = workspace.newBlock("Paint2");
-                    actionBlock.setFieldValue(aux[2], "COLOUR");
+                    actionBlock.setFieldValue(data[2], "COLOUR");
                 } else {
                     actionBlock = workspace.newBlock("Paint");
-                    actionBlock.setFieldValue(aux[2], "Fst");
-                    actionBlock.setFieldValue(aux[3], "Snd");
-                    actionBlock.setFieldValue(aux[4], "Thr");
-                    actionBlock.setFieldValue(aux[5], "Fhr");
+                    actionBlock.setFieldValue(data[2], "Fst");
+                    actionBlock.setFieldValue(data[3], "Snd");
+                    actionBlock.setFieldValue(data[4], "Thr");
+                    actionBlock.setFieldValue(data[5], "Fhr");
                 }
-            } else if (aux[1] === "conjugate" || aux[1] === "conjugate_directed") {
+            } else if (data[1] === "conjugate" || data[1] === "conjugate_directed") {
                 actionBlock = workspace.newBlock("Conjugate");
-                actionBlock.setFieldValue(aux[2], "NAME");
-                actionBlock.setFieldValue(aux[3], "ratio");
-            } else if (aux[1] === "lose_plasmid" || aux[1] === "set_eex" || aux[1] === "remove_eex") {
+                actionBlock.setFieldValue(data[2], "NAME");
+                actionBlock.setFieldValue(data[3], "ratio");
+            } else if (data[1] === "lose_plasmid" || data[1] === "set_eex" || data[1] === "remove_eex") {
                 actionBlock = workspace.newBlock("ActionR1");
-                actionBlock.setFieldValue(aux[2], "NAME");
-            } else if (aux[1] === "s_emit_signal" || aux[1] === "s_emit_cf") {
+                actionBlock.setFieldValue(data[2], "NAME");
+            } else if (data[1] === "s_emit_signal" || data[1] === "s_emit_cf") {
                 actionBlock = workspace.newBlock("ActionR2");
-                if(aux[2].includes("tostring")){
-                    aux[2] = aux[2].replace("tostring(", "").replace(")", "");
+                if(data[2].includes("tostring")){
+                    data[2] = data[2].replace("tostring(", "").replace(")", "");
                 }
-                actionBlock.setFieldValue(aux[2], "ID");
-                actionBlock.setFieldValue(aux[3], "Snd");
-                actionBlock.setFieldValue(aux[4], "eTYPE");
-            } else if (aux[1] === "s_absorb_QS" || aux[1] === "s_get_QS") {
+                actionBlock.setFieldValue(data[2], "ID");
+                actionBlock.setFieldValue(data[3], "Snd");
+                actionBlock.setFieldValue(data[4], "eTYPE");
+            } else if (data[1] === "s_absorb_QS" || data[1] === "s_get_QS") {
                 actionBlock = workspace.newBlock("ActionR3");
-                if(aux[2].includes("tostring")){
-                    aux[2] = aux[2].replace("tostring(", "").replace(")", "");
+                if(data[2].includes("tostring")){
+                    data[2] = data[2].replace("tostring(", "").replace(")", "");
                 }
-                actionBlock.setFieldValue(aux[2], "ID");
-                actionBlock.setFieldValue(aux[3], "COMPARISON");
-                actionBlock.setFieldValue(aux[4], "Snd");
-                actionBlock.setFieldValue(aux[5], "PROTEIN");
+                actionBlock.setFieldValue(data[2], "ID");
+                actionBlock.setFieldValue(data[3], "COMPARISON");
+                actionBlock.setFieldValue(data[4], "Snd");
+                actionBlock.setFieldValue(data[5], "PROTEIN");
             }
 
             if(actionBlock !== undefined) {
+                let parentConnection3; let childConnection3;
+                //Conexion de bloque con bloque de experimento
+                if(actions.length > 1){
+                    parentConnection3 = actions[actions.length-2].nextConnection;
+                    childConnection3 = block.previousConnection;
+                    parentConnection3.connect(childConnection3);
+                } else if(signals !== undefined) {
+                    let found = false; let first = true;
+                    let children = []; let parent = [];
+                    let child;
+                    while(!found){
+                        if(first){
+                            children = signals.childBlocks_;
+                            first = false;
+                        }else {
+                            children = parent.childBlocks_;
+                        }
+                        if(children.length === 0) {
+                            if(parent.length === 0){
+                                child = signals;
+                            }else {
+                                child = parent;
+                            }
+                            found = true;
+                        } else{
+                            parent = children[0];
+                        }
+                    }
+                    parentConnection3 = child.nextConnection;
+                    childConnection3 = block.previousConnection;
+                    parentConnection3.connect(childConnection3);
+                } else if(nutrients !== undefined) {
+                    parentConnection3 = nutrients.nextConnection;
+                    childConnection3 = block.previousConnection;
+                    parentConnection3.connect(childConnection3);
+                } else if(dumpSingle !== undefined) {
+                    parentConnection3 = dumpSingle.nextConnection;
+                    childConnection3 = block.previousConnection;
+                    parentConnection3.connect(childConnection3);
+                } else {
+                    parentConnection3 = experiment.nextConnection;
+                    childConnection3 = block.previousConnection;
+                    parentConnection3.connect(childConnection3);
+                }
 
                 //Conexion de bloque Action con bloque ProteinL
                 renderBlock(protBlock);
-                let parentConnection2 = block.getInput('ProteinL').connection;
-                let childConnection2 = protBlock.outputConnection;
-                parentConnection2.connect(childConnection2);
-
+                let parentConnection = block.getInput('ProteinL').connection;
+                let childConnection = protBlock.outputConnection;
+                parentConnection.connect(childConnection);
 
                 //Conexion de bloque Action con bloque de accion interior
                 renderBlock(actionBlock);
-                let parentConnection = block.getInput('Action').connection;
-                let childConnection = actionBlock.outputConnection;
-                parentConnection.connect(childConnection);
-
+                let parentConnection2 = block.getInput('Action').connection;
+                let childConnection2 = actionBlock.outputConnection;
+                parentConnection2.connect(childConnection2);
 
             }
-            //renderBlock(protBlock);
             renderBlock(block);
+        } else if(type === "Signal"){
+            let block = workspace.newBlock(type);
+            block.setFieldValue(data[0], "NAME");
+            block.setFieldValue(data[1], "KDIFF");
+            block.setFieldValue(data[2], "KDEG");
+
+            renderBlock(block);
+            let parentConnection = signals.nextConnection;
+            let childConnection = block.previousConnection;
+            parentConnection.connect(childConnection);
+
+        } else if(type === "DumpSingle"){
+            dumpSingle = workspace.newBlock(type);
+            dumpSingle.setFieldValue(data[0], "ROUTE");
+            dumpSingle.setFieldValue(data[1], "FN");
+            dumpSingle.setFieldValue(data[2], "RT");
+
+            renderBlock(dumpSingle);
+            let parentConnection = experiment.nextConnection;
+            let childConnection = dumpSingle.previousConnection;
+            parentConnection.connect(childConnection);
+
+            if(nutrients !== undefined) {
+                let parentConnection2 = dumpSingle.nextConnection;
+                let childConnection2 = nutrients.previousConnection;
+                parentConnection2.connect(childConnection2);
+            } else if(signals !== undefined) {
+                let parentConnection2 = dumpSingle.nextConnection;
+                let childConnection2 = signals.previousConnection;
+                parentConnection2.connect(childConnection2);
+            }
         }
+    }
+
+
+    /*
+        Funcion que toma los datos necesarios para la creacion y conexion de operones y sus componentes
+    */
+    function createOperonBlock(operonData, promoterData, proteinData){
+
+        console.log("Create Block: Operon");
+        let operonBlock = workspace.newBlock("Operon");
+        operonBlock.setFieldValue(operonData[0], "NAME");
+        operonBlock.setFieldValue(operonData[1], "Nup");
+        operonBlock.setFieldValue(operonData[2], "Ndown");
+        operonBlock.setFieldValue(operonData[3], "Tnoise");
+
+        operons.push({id: operonBlock.id, name: operonData[0]});
+
+        renderBlock(operonBlock);
+
+        let promoterBlock = workspace.newBlock("Promoter");
+        promoterBlock.setFieldValue(promoterData[0], "GATE");
+        if (promoterData[1] !== 0) { //si hay un 0 quiere decir que el promotor no toma ninguna proteina
+            let proteinList = [];
+            for (let i = 0; i < promoterData[1].length; i++) {
+                proteinList[i] = workspace.newBlock("ProteinL");
+                proteinList[i].setFieldValue(promoterData[1][i], "NAME");
+
+                renderBlock(proteinList[i]);
+                let parentConnection = promoterBlock.getInput('ProteinL').connection;
+                let childConnection = proteinList[i].outputConnection;
+                parentConnection.connect(childConnection);
+            }
+        }
+
+        //connection to operon
+
+        let parentConnection = operonBlock.getInput('Operon').connection;
+        let childConnection = promoterBlock.outputConnection;
+        parentConnection.connect(childConnection);
+
+        renderBlock(promoterBlock);
+
+        let proteinBlocks = [];
+        for (let i = 0; i < proteinData.length; i++) {
+            proteinBlocks[i] = workspace.newBlock("Protein");
+            proteinBlocks[i].setFieldValue(proteinData[i][0], "NAME");
+            proteinBlocks[i].setFieldValue(proteinData[i][1], "Act");
+            proteinBlocks[i].setFieldValue(proteinData[i][2], "Deac");
+            proteinBlocks[i].setFieldValue(proteinData[i][3], "Vup");
+            proteinBlocks[i].setFieldValue(proteinData[i][4], "Vdown");
+
+            //connection to operon
+            if(i === 0){
+                let parentConnection2 = operonBlock.getInput('NAME').connection;
+                let childConnection2 = proteinBlocks[i].outputConnection;
+                parentConnection2.connect(childConnection2);
+            } else {
+                let parentConnection2 = proteinBlocks[i-1].getInput("Protein").connection;
+                let childConnection2 = proteinBlocks[i].outputConnection;
+                parentConnection2.connect(childConnection2);
+            }
+        }
+
+        renderBlocks(proteinBlocks);
     }
 
     /*
